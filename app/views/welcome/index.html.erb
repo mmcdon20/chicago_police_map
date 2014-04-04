@@ -1,0 +1,63 @@
+<h1>Welcome#index</h1>
+<p>Find me in app/views/welcome/index.html.erb</p>
+
+<div id="map"></div>
+
+<script type="text/javascript">
+    var map = L.map('map').setView([41.8, -88], 10);
+
+    var cloudmade = L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpg', {
+        key: 'BC9A493B41014CAABB98F0471D759707',
+        styleId: 22677
+    }).addTo(map);
+
+    function style(feature) {
+        return {
+            weight: 1,
+            opacity: 1,
+            color: '#000',
+            dashArray: '',
+            fillOpacity: 0.7,
+            fillColor: 'green'
+        };
+    }
+
+    function highlightFeature(e) {
+        var layer = e.target;
+
+        layer.setStyle({
+            weight: 1,
+            color: '#F00',
+            dashArray: '',
+            fillOpacity: 0.7
+        });
+
+        if (!L.Browser.ie && !L.Browser.opera) {
+            layer.bringToFront();
+        }
+
+        info.update(layer.feature.properties);
+    }
+
+    function resetHighlight(e) {
+        geojson.resetStyle(e.target);
+        info.update();
+    }
+
+    function zoomToFeature(e) {
+        map.fitBounds(e.target.getBounds());
+    }
+
+    function onEachFeature(feature, layer) {
+        layer.on({
+            mouseover: highlightFeature,
+            mouseout: resetHighlight,
+            click: zoomToFeature
+        });
+    }
+
+    geojson = L.geoJson(policeData, {
+        style: style,
+        onEachFeature: onEachFeature
+    }).addTo(map);
+</script>
