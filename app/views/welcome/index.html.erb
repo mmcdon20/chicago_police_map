@@ -6,10 +6,7 @@
 <script type="text/javascript">
     var map = L.map('map').setView([41.8, -88], 10);
 
-    var cloudmade = L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpg', {
-        key: 'BC9A493B41014CAABB98F0471D759707',
-        styleId: 22677
-    }).addTo(map);
+    L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpg').addTo(map);
 
     function style(feature) {
         return {
