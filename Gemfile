@@ -33,6 +33,9 @@ gem 'leaflet-rails'
 # Bootstrap styling
 gem 'bootstrap-sass', '~> 3.1.1'
 
+# Json parsing
+gem 'json'
+
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false
