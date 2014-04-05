@@ -14,7 +14,7 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-xs-12 col-md-3">
-      <h2>Info and shit</h2>
+      <h2>Map of Chicago by Police Beats</h2>
       <p>Find me in app/views/welcome/index.html.erb</p>
       <button class="btn btn-warning btn-lg">hi</button>
       <hr />
@@ -28,7 +28,23 @@
 </div>
 
 <script type="text/javascript">
-    var map = L.map('map').setView([41.8, -88], 10);
+    var map = L.map('map').setView([41.82, -87.75], 11);
+
+    // control that shows state info on hover
+    var info = L.control();
+
+    info.onAdd = function (map) {
+        this._div = L.DomUtil.create('div', 'info');
+        this.update();
+        return this._div;
+    };
+
+    info.update = function (props) {
+        this._div.innerHTML = '<h4>District / Beat</h4>' + (props ?
+                props.district + '/' + props.beat : 'Hover over a beat');
+    };
+
+    info.addTo(map);
 
     L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpg').addTo(map);
 
@@ -65,15 +81,10 @@
         info.update();
     }
 
-    function zoomToFeature(e) {
-        map.fitBounds(e.target.getBounds());
-    }
-
     function onEachFeature(feature, layer) {
         layer.on({
             mouseover: highlightFeature,
-            mouseout: resetHighlight,
-            click: zoomToFeature
+            mouseout: resetHighlight
         });
     }
 
