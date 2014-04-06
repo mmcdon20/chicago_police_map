@@ -1,29 +1,17 @@
-<nav class="navbar navbar-default" role="navigation">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="#">Welcome#index</a>
-    </div>
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Home</a></li>
-      </ul>
-    </div>
-  </div>
-</nav>
-
 <div class="container-fluid">
   <div class="row">
     <div class="col-xs-12 col-md-3">
-      <h2>Map of Chicago by Police Beats</h2>
-      <p>Find me in app/views/welcome/index.html.erb</p>
-      <button class="btn btn-warning btn-lg">hi</button>
+      <h2>Crime in Chicago by Police Beats</h2>
+
+      <p>Total crimes reported: <%= @count %></p>
+
+      <p>All data collected from <a href="https://data.cityofchicago.org/">
+        City of Chicago Data Portal</a>.</p>
       <hr />
     </div>
-
     <div class="col-xs-12 col-md-9" id="map-container">
       <div id="map"></div>
     </div>
-
   </div>
 </div>
 
