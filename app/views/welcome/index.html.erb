@@ -3,10 +3,15 @@
     <div class="col-xs-12 col-md-3">
       <h2>Crime in Chicago by Police Beats</h2>
 
+      <p>Click on a beat for additional info, or select a beat from the dropdown menu below.</p>
+      <%= select("Beats", "Beats", @beats, {:include_blank => true}, {:class => 'form-control'}) %>
+      <hr />
+
+      <div class="crimes">sup</div>
+
+      <hr />
       <p>All data collected from <a href="https://data.cityofchicago.org/">
         City of Chicago Data Portal</a>.</p>
-
-      <%= select("Beats", "Beats", @beats, {:include_blank => true}, {:class => 'form-control'}) %>
       <hr />
     </div>
     <div class="col-xs-12 col-md-9" id="map-container">
@@ -95,7 +100,7 @@
     legend.onAdd = function (map) {
         var div = L.DomUtil.create('div', 'info legend');
 
-        div.innerHTML += '<h4>Legend</h4>'
+        div.innerHTML += '<h4>Crimes per Beat</h4>'
 
         for (var i = 0; i < levels.length; i++) {
             div.innerHTML +=
