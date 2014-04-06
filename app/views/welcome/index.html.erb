@@ -1,18 +1,21 @@
 <div class="container-fluid">
   <div class="row">
-    <div class="col-xs-12 col-md-3">
+    <div class="col-xs-12 col-md-3" id="data">
       <h2>Crime in Chicago by Police Beats</h2>
 
       <p>Click on a beat for additional info, or select a beat from the dropdown menu below.</p>
-      <%= select("Beats", "Beats", @beats, {:include_blank => true}, {:class => 'form-control'}) %>
+      <%= select('Beats', 'Beats', @beats, {include_blank:true}, {class:'form-control'}) %>
       <hr />
 
       <div class="crimes">sup</div>
+      <div id="output">sup</div>
 
       <hr />
       <p>All data collected from <a href="https://data.cityofchicago.org/">
         City of Chicago Data Portal</a>.</p>
       <hr />
+
+
     </div>
     <div class="col-xs-12 col-md-9" id="map-container">
       <div id="map"></div>
@@ -34,6 +37,20 @@
     // displays info on severity limits
     var legend = L.control({position: 'bottomright'});
 
+    // the last beat element to be selected
+    var last = null;
+
+    // select box containing a list of beats
+    var select = document.getElementById('Beats_Beats');
+
+    select.onchange = function() {
+      var selected = this.value;
+
+
+      //info.update();
+      document.getElementById("output").innerHTML = policeData;
+    }
+
     info.onAdd = function (map) {
         this._div = L.DomUtil.create('div', 'info');
         this.update();
@@ -42,31 +59,37 @@
 
     info.update = function (props) {
         this._div.innerHTML = '<h4>District / Beat</h4>' +
-            (props ? 'Beat ' + props.beat + ' has had ' + severity[props.beat] + ' reported crimes in 2014.' : 'Hover over a beat');
+            (props ? 'Beat ' + props.beat + ' has had ' + severity[props.beat] + ' reported crimes in 2014.' : 'Select a beat');
     };
 
     info.addTo(map);
 
-    L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpg').addTo(map);
+    //L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpg').addTo(map);
+    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
     function style(feature) {
         return {
             weight: 1,
             opacity: 1,
             color: '#000',
-            dashArray: '',
             fillOpacity: 0.7,
             fillColor: getColor(severity[feature.properties.beat])
         };
     }
 
     function highlightFeature(e) {
+        //geojson.resetStyle();
+
         var layer = e.target;
 
+        if (last) resetHighlight(last);
+        last = e;
+
+        select.value = layer.feature.properties.beat;
+
         layer.setStyle({
-            weight: 1,
+            weight: 4,
             color: '#0F0',
-            dashArray: '',
             fillOpacity: 0.7
         });
 
@@ -84,8 +107,9 @@
 
     function onEachFeature(feature, layer) {
         layer.on({
-            mouseover: highlightFeature,
-            mouseout: resetHighlight
+            //mouseover: highlightFeature,
+            //mouseout: resetHighlight,
+            click: highlightFeature
         });
     }
 
