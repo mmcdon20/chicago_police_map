@@ -3,10 +3,10 @@
     <div class="col-xs-12 col-md-3">
       <h2>Crime in Chicago by Police Beats</h2>
 
-      <p>Total crimes reported: <%= @count %></p>
-
       <p>All data collected from <a href="https://data.cityofchicago.org/">
         City of Chicago Data Portal</a>.</p>
+
+      <%= select("Beats", "Beats", @beats, {:include_blank => true}, {:class => 'form-control'}) %>
       <hr />
     </div>
     <div class="col-xs-12 col-md-9" id="map-container">
@@ -21,6 +21,14 @@
     // control that shows state info on hover
     var info = L.control();
 
+    // contains severity data
+    var severity = <%=raw(@frequency.to_json)%>;
+
+    var levels = <%=raw(@levels.to_json)%>;
+
+    // displays info on severity limits
+    var legend = L.control({position: 'bottomright'});
+
     info.onAdd = function (map) {
         this._div = L.DomUtil.create('div', 'info');
         this.update();
@@ -28,8 +36,8 @@
     };
 
     info.update = function (props) {
-        this._div.innerHTML = '<h4>District / Beat</h4>' + (props ?
-                props.district + '/' + props.beat : 'Hover over a beat');
+        this._div.innerHTML = '<h4>District / Beat</h4>' +
+            (props ? 'Beat ' + props.beat + ' has had ' + severity[props.beat] + ' reported crimes in 2014.' : 'Hover over a beat');
     };
 
     info.addTo(map);
@@ -43,7 +51,7 @@
             color: '#000',
             dashArray: '',
             fillOpacity: 0.7,
-            fillColor: 'green'
+            fillColor: getColor(severity[feature.properties.beat])
         };
     }
 
@@ -52,7 +60,7 @@
 
         layer.setStyle({
             weight: 1,
-            color: '#F00',
+            color: '#0F0',
             dashArray: '',
             fillOpacity: 0.7
         });
@@ -75,6 +83,29 @@
             mouseout: resetHighlight
         });
     }
+
+    function getColor(d) {
+        return d > levels[1] ? '#800026':
+               d > levels[2] ? '#BD0026':
+               d > levels[3] ? '#FC4E2A':
+               d > levels[4] ? '#FEB24C':
+                               '#FFEDA0';
+    }
+
+    legend.onAdd = function (map) {
+        var div = L.DomUtil.create('div', 'info legend');
+
+        div.innerHTML += '<h4>Legend</h4>'
+
+        for (var i = 0; i < levels.length; i++) {
+            div.innerHTML +=
+                '<i style="background:' + getColor(levels[i]) + '"></i> ' +
+                    (levels[i+1] ? levels[i+1]: '0') + '&ndash;' + levels[i] + '<br />';
+        }
+        return div;
+    };
+
+    legend.addTo(map);
 
     geojson = L.geoJson(policeData, {
         style: style,
