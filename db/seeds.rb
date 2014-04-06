@@ -5,3 +5,16 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+require 'csv'
+
+CSV.foreach("#{Rails.root}/lib/data/Crimes.csv", headers: true) do |crime|
+  date = DateTime.strptime(crime['Date'],'%m/%d/%Y %H:%M:%S %p')
+  Crime.create(date:        date,
+               case:        crime['Case Number'],
+               primary:     crime['Primary Type'],
+               description: crime['Description'],
+               beat:        crime['Beat'],
+               district:    crime['District'])
+end
+
