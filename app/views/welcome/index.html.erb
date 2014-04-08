@@ -11,7 +11,7 @@
       <h5 id="reports"></h5>
 
       <div class="list-group" id="output"></div>
-      <button type="button" class="btn btn-default btn-lg" disabled="disabled">More</button>
+      <button type="button" class="btn btn-default btn-lg" id="more">More</button>
 
       <hr />
       <p>All data collected from <a href="https://data.cityofchicago.org/">
@@ -42,6 +42,9 @@
 
     // select box containing a list of beats
     var select = document.getElementById('Beats_Beats');
+
+    // current offset position
+    var offset = 0;
 
     select.onchange = function() {
         updateHeader(this.value);
@@ -101,10 +104,11 @@
     function updateHeader(beat) {
         $("#header").html("Beat " + beat);
         $("#reports").html(severity[beat] + " reported crimes in 2014");
+        offset = 0;
 
         $.ajax({
             url: "welcome/crimes",
-            data: {offset: 0, beat: beat},
+            data: {offset: offset, beat: beat},
             success: function(data){
                 $("#output").html(data);
             },
@@ -113,6 +117,25 @@
             }
         });
     }
+
+    function showMoreCrimes(beat) {
+        offset += 10;
+
+        $.ajax({
+            url: "welcome/crimes",
+            data: {offset: offset, beat: beat},
+            success: function(data){
+                $("#output").append(data);
+            },
+            error: function() {
+                $("#output").html('<p>An AJAX error occurred.</p>');
+            }
+        });
+    }
+
+    $("#more").click(function(){
+        showMoreCrimes(select.value);
+    });
 
     legend.onAdd = function (map) {
         var div = L.DomUtil.create('div', 'info legend');
