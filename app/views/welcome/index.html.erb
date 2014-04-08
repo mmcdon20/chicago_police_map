@@ -119,7 +119,7 @@
 
     function requestCrimes(beat, success) {
         $.ajax({
-            url: "welcome/crimes",
+            url: "/welcome/crimes",
             data: {offset: offset, beat: beat},
             success: success,
             error: function() {
