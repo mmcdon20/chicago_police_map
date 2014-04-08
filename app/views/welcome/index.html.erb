@@ -28,9 +28,6 @@
 <script type="text/javascript">
     var map = L.map('map', {attributionControl: false}).setView([41.82, -87.75], 11);
 
-    // control that shows state info on hover
-    var info = L.control();
-
     // contains severity data
     var severity = <%=raw(@frequency.to_json)%>;
 
@@ -38,7 +35,7 @@
     var levels = <%=raw(@levels.to_json)%>;
 
     // displays info on severity limits
-    var legend = L.control({position: 'bottomright'});
+    var legend = L.control({position: 'topright'});
 
     // the last beat element to be selected
     var last = null;
@@ -46,28 +43,9 @@
     // select box containing a list of beats
     var select = document.getElementById('Beats_Beats');
 
-    // Title for a beat
-    var header = document.getElementById("header");
-
-    // Subtitle for a beat listing crime report count
-    var reports = document.getElementById("reports");
-
     select.onchange = function() {
         updateHeader(this.value);
     };
-
-    info.onAdd = function (map) {
-        this._div = L.DomUtil.create('div', 'info');
-        this.update();
-        return this._div;
-    };
-
-    info.update = function (props) {
-        this._div.innerHTML = '<h4>District / Beat</h4>' +
-            (props ? 'Beat ' + props.beat + ' has had ' + severity[props.beat] + ' reported crimes in 2014.' : 'Select a beat');
-    };
-
-    info.addTo(map);
 
     //L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpg').addTo(map);
     L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
@@ -83,8 +61,6 @@
     }
 
     function highlightFeature(e) {
-        //geojson.resetStyle();
-
         var layer = e.target;
 
         if (last) resetHighlight(last);
@@ -102,19 +78,14 @@
         if (!L.Browser.ie && !L.Browser.opera) {
             layer.bringToFront();
         }
-
-        info.update(layer.feature.properties);
     }
 
     function resetHighlight(e) {
         geojson.resetStyle(e.target);
-        info.update();
     }
 
     function onEachFeature(feature, layer) {
         layer.on({
-            //mouseover: highlightFeature,
-            //mouseout: resetHighlight,
             click: highlightFeature
         });
     }
@@ -128,8 +99,19 @@
     }
 
     function updateHeader(beat) {
-        header.innerHTML = "Beat " + beat;
-        reports.innerHTML = severity[beat] + " reported crimes in 2014";
+        $("#header").html("Beat " + beat);
+        $("#reports").html(severity[beat] + " reported crimes in 2014");
+
+        $.ajax({
+            url: "welcome/crimes",
+            data: {offset: 0, beat: beat},
+            success: function(data){
+                $("#output").html(data);
+            },
+            error: function() {
+                $("#output").html('<p>An AJAX error occurred.</p>');
+            }
+        });
     }
 
     legend.onAdd = function (map) {
