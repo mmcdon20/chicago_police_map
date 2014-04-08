@@ -3,28 +3,30 @@
     <div class="col-xs-12 col-md-3" id="data">
       <h2>Crime in Chicago by Police Beats</h2>
 
-      <p>Click on a beat for additional info, or select a beat from the dropdown menu below.</p>
+      <hr />
       <%= select('Beats', 'Beats', @beats, {include_blank:true}, {class:'form-control'}) %>
       <hr />
 
-      <div class="crimes">sup</div>
-      <div id="output">sup</div>
+      <h4 id="header">Click on a beat for additional info, or select a beat from the dropdown menu.</h4>
+      <h5 id="reports"></h5>
+
+      <div class="list-group" id="output"></div>
+      <button type="button" class="btn btn-default btn-lg" disabled="disabled">More</button>
 
       <hr />
       <p>All data collected from <a href="https://data.cityofchicago.org/">
         City of Chicago Data Portal</a>.</p>
       <hr />
 
-
     </div>
-    <div class="col-xs-12 col-md-9" id="map-container">
+    <div class="col-xs-12 col-md-9" id="map-container" style="padding:0px">
       <div id="map"></div>
     </div>
   </div>
 </div>
 
 <script type="text/javascript">
-    var map = L.map('map').setView([41.82, -87.75], 11);
+    var map = L.map('map', {attributionControl: false}).setView([41.82, -87.75], 11);
 
     // control that shows state info on hover
     var info = L.control();
@@ -32,6 +34,7 @@
     // contains severity data
     var severity = <%=raw(@frequency.to_json)%>;
 
+    // contains info for the legend
     var levels = <%=raw(@levels.to_json)%>;
 
     // displays info on severity limits
@@ -43,13 +46,15 @@
     // select box containing a list of beats
     var select = document.getElementById('Beats_Beats');
 
+    // Title for a beat
+    var header = document.getElementById("header");
+
+    // Subtitle for a beat listing crime report count
+    var reports = document.getElementById("reports");
+
     select.onchange = function() {
-      var selected = this.value;
-
-
-      //info.update();
-      document.getElementById("output").innerHTML = policeData;
-    }
+        updateHeader(this.value);
+    };
 
     info.onAdd = function (map) {
         this._div = L.DomUtil.create('div', 'info');
@@ -84,6 +89,7 @@
 
         if (last) resetHighlight(last);
         last = e;
+        updateHeader(layer.feature.properties.beat);
 
         select.value = layer.feature.properties.beat;
 
@@ -119,6 +125,11 @@
                d > levels[3] ? '#FC4E2A':
                d > levels[4] ? '#FEB24C':
                                '#FFEDA0';
+    }
+
+    function updateHeader(beat) {
+        header.innerHTML = "Beat " + beat;
+        reports.innerHTML = severity[beat] + " reported crimes in 2014";
     }
 
     legend.onAdd = function (map) {
