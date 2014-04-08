@@ -15,4 +15,8 @@ class WelcomeController < ApplicationController
 
     @levels = [(max*1.0), (max*0.8), (max*0.6), (max*0.4), (max*0.2)].map(&:to_i)
   end
+
+  def crimes
+    @crimes = Crime.limit(10).offset(params[:offset]).where(beat:params[:beat])
+  end
 end

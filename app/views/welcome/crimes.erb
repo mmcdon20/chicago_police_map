@@ -1,0 +1,10 @@
+<h1>List of crimes for <%= params[:beat] %></h1>
+
+<div class="list-group">
+<% @crimes.each do |crime| %>
+   <a href="#" onclick="return false;" class="list-group-item">
+     <h4><%= crime.primary %> - <%= crime.description %></h4>
+     <p><%= crime.date.asctime %></p>
+   </a>
+<% end %>
+</div>
