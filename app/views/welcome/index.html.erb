@@ -105,28 +105,23 @@
         $("#header").html("Beat " + beat);
         $("#reports").html(severity[beat] + " reported crimes in 2014");
         offset = 0;
-
-        $.ajax({
-            url: "welcome/crimes",
-            data: {offset: offset, beat: beat},
-            success: function(data){
-                $("#output").html(data);
-            },
-            error: function() {
-                $("#output").html('<p>An AJAX error occurred.</p>');
-            }
+        requestCrimes(beat, function(data) {
+            $("#output").html(data);
         });
     }
 
     function showMoreCrimes(beat) {
         offset += 10;
+        requestCrimes(beat, function(data) {
+            $("#output").append(data);
+        });
+    }
 
+    function requestCrimes(beat, success) {
         $.ajax({
             url: "welcome/crimes",
             data: {offset: offset, beat: beat},
-            success: function(data){
-                $("#output").append(data);
-            },
+            success: success,
             error: function() {
                 $("#output").html('<p>An AJAX error occurred.</p>');
             }
