@@ -7,6 +7,8 @@ class CreateCrimes < ActiveRecord::Migration
       t.string :description
       t.string :beat
       t.string :district
+      t.float  :latitude
+      t.float  :longitude
 
       t.timestamps
     end
