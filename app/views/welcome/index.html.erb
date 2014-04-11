@@ -40,11 +40,13 @@
     // the last beat element to be selected
     var last = null;
 
+    // current offset position
+    var offset = 0;
+
     // select box containing a list of beats
     var select = document.getElementById('Beats_Beats');
 
-    // current offset position
-    var offset = 0;
+    select.value = '';
 
     select.onchange = function() {
         updateHeader(this.value);
@@ -69,8 +71,8 @@
 
         if (last) resetHighlight(last);
         last = e;
-        updateHeader(beat);
 
+        if (select.value != beat) updateHeader(beat);
         select.value = beat;
 
         layer.setStyle({
@@ -127,14 +129,19 @@
     }
 
     function requestCrimes(beat, success) {
-        $.ajax({
-            url: "/welcome/crimes",
-            data: {offset: offset, beat: beat},
-            success: success,
-            error: function() {
-                $("#output").html('<p>An AJAX error occurred.</p>');
-            }
-        });
+        if (severity[beat] != null) {
+            $.ajax({
+                url: "/welcome/crimes",
+                data: {offset: offset, beat: beat},
+                success: success,
+                error: function() {
+                    $("#output").html('<p>An AJAX error occurred.</p>');
+                }
+            });
+        } else {
+            $("#output").html('');
+            select.value = '';
+        }
         setMoreButtonStatus(beat);
     }
 
