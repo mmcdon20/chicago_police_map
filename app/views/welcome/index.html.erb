@@ -11,7 +11,7 @@
       <h5 id="reports"></h5>
 
       <div class="list-group" id="output"></div>
-      <button type="button" class="btn btn-default btn-lg" id="more">More</button>
+      <button type="button" class="btn btn-default btn-lg" id="more" disabled="disabled">More</button>
 
       <hr />
       <p>All data collected from <a href="https://data.cityofchicago.org/">
@@ -105,6 +105,7 @@
         $("#header").html("Beat " + beat);
         $("#reports").html(severity[beat] + " reported crimes in 2014");
         offset = 0;
+        setMoreButtonStatus(beat);
         requestCrimes(beat, function(data) {
             $("#output").html(data);
         });
@@ -112,10 +113,17 @@
 
     function showMoreCrimes(beat) {
         offset += 10;
-        if (offset < severity[beat]) {
-            requestCrimes(beat, function(data) {
-                $("#output").append(data);
-            });
+        setMoreButtonStatus(beat);
+        requestCrimes(beat, function(data) {
+            $("#output").append(data);
+        });
+    }
+
+    function setMoreButtonStatus(beat) {
+        if (offset + 10 >= severity[beat]){
+            $("#more").prop('disabled', true);
+        } else {
+            $("#more").prop('disabled', false);
         }
     }
 
