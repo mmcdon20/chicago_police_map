@@ -112,9 +112,11 @@
 
     function showMoreCrimes(beat) {
         offset += 10;
-        requestCrimes(beat, function(data) {
-            $("#output").append(data);
-        });
+        if (offset < severity[beat]) {
+            requestCrimes(beat, function(data) {
+                $("#output").append(data);
+            });
+        }
     }
 
     function requestCrimes(beat, success) {
