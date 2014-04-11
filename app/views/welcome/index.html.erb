@@ -65,12 +65,13 @@
 
     function highlightFeature(e) {
         var layer = e.target;
+        var beat = layer.feature.properties.beat;
 
         if (last) resetHighlight(last);
         last = e;
-        updateHeader(layer.feature.properties.beat);
+        updateHeader(beat);
 
-        select.value = layer.feature.properties.beat;
+        select.value = beat;
 
         layer.setStyle({
             weight: 4,
@@ -105,7 +106,6 @@
         $("#header").html("Beat " + beat);
         $("#reports").html(severity[beat] + " reported crimes in 2014");
         offset = 0;
-        setMoreButtonStatus(beat);
         requestCrimes(beat, function(data) {
             $("#output").html(data);
         });
@@ -113,7 +113,6 @@
 
     function showMoreCrimes(beat) {
         offset += 10;
-        setMoreButtonStatus(beat);
         requestCrimes(beat, function(data) {
             $("#output").append(data);
         });
@@ -136,6 +135,7 @@
                 $("#output").html('<p>An AJAX error occurred.</p>');
             }
         });
+        setMoreButtonStatus(beat);
     }
 
     $("#more").click(function(){
