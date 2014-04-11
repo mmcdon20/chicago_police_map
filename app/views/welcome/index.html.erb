@@ -119,7 +119,7 @@
     }
 
     function setMoreButtonStatus(beat) {
-        if (offset + 10 >= severity[beat]){
+        if (offset + 10 >= severity[beat] || severity[beat] == null){
             $("#more").prop('disabled', true);
         } else {
             $("#more").prop('disabled', false);
