@@ -43,6 +43,9 @@
     // current offset position
     var offset = 0;
 
+    //
+    var lastMarker = L.marker([0, 0]);
+
     // select box containing a list of beats
     var select = document.getElementById('Beats_Beats');
 
@@ -54,6 +57,16 @@
 
     //L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpg').addTo(map);
     L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+    function plotCrime(lat, lon, desc, time) {
+        var marker = L.marker([lat, lon]);
+        map.removeLayer(lastMarker);
+        lastMarker = marker;
+        marker.addTo(map)
+              .bindPopup(desc + '<br>' + time)
+              .openPopup();
+        map.setView([lat,lon],18,{});
+    }
 
     function style(feature) {
         return {
