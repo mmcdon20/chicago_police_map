@@ -46,6 +46,9 @@
     // The last marker placed on map, needed when removing previous marker from map
     var lastMarker = L.marker([0, 0]);
 
+    // The last id for a crime description, needed when removing selected status
+    var lastId = '';
+
     // select box containing a list of beats
     var select = document.getElementById('Beats_Beats');
 
@@ -58,7 +61,11 @@
     //L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpg').addTo(map);
     L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-    function plotCrime(lat, lon, desc, time) {
+    function plotCrime(lat, lon, desc, time, id) {
+        $("#" + lastId).removeClass().addClass('list-group-item');
+        $("#" + id).removeClass().addClass('list-group-item active');
+        lastId = id;
+
         var marker = L.marker([lat, lon]);
         map.removeLayer(lastMarker);
         lastMarker = marker;
