@@ -58,6 +58,7 @@
     select.value = '';
 
     select.onchange = function() {
+        updateCrimeList(this.value);
         highlightFeatureAUX(beatDictionary[this.value]);
     };
 
@@ -89,17 +90,14 @@
     }
 
     function highlightFeature(e) {
+        var beat = e.target.feature.properties.beat;
+        if (select.value != beat) updateCrimeList(beat);
         highlightFeatureAUX(e.target);
     }
 
     function highlightFeatureAUX(layer) {
-        var beat = layer.feature.properties.beat;
-
         if (last) resetHighlight(last);
         last = layer;
-
-        if (select.value != beat) updateHeader(beat);
-        select.value = beat;
 
         layer.setStyle({
             weight: 4,
@@ -131,13 +129,14 @@
                                '#FFEDA0';
     }
 
-    function updateHeader(beat) {
+    function updateCrimeList(beat) {
         $("#header").html("Beat " + beat);
         $("#reports").html(severity[beat] + " reported crimes in 2014");
         offset = 0;
         requestCrimes(beat, function(data) {
             $("#output").html(data);
         });
+        select.value = beat;
     }
 
     function showMoreCrimes(beat) {
