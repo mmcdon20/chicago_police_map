@@ -27,7 +27,7 @@
 </div>
 
 <script type="text/javascript">
-    var map = L.map('map', {attributionControl: false}).setView([41.82, -87.75], 11);
+    var map = L.map('map', {attributionControl: false});
 
     // contains severity data
     var severity = <%=raw(@frequency.to_json)%>;
@@ -71,7 +71,7 @@
     L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
     function resetState() {
-        map.setView([41.82, -87.75], 11);
+        map.fitBounds(geojson);
         $("#header").html("Click on a beat for additional info, or select a beat from the dropdown menu.");
         $("#reports").html("");
         $("#output").html("");
@@ -227,4 +227,6 @@
         style: style,
         onEachFeature: onEachFeature
     }).addTo(map);
+
+    map.fitBounds(geojson);
 </script>
