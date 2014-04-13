@@ -12,6 +12,7 @@
 
       <div class="list-group" id="output"></div>
       <button type="button" class="btn btn-default btn-lg" id="more" disabled="disabled">More</button>
+      <button type="button" class="btn btn-danger btn-lg" id="reset" disabled="disabled">Reset</button>
 
       <hr />
       <p>All data collected from <a href="https://data.cityofchicago.org/">
@@ -58,12 +59,27 @@
     select.value = '';
 
     select.onchange = function() {
-        updateCrimeList(this.value);
-        highlightFeatureAUX(beatDictionary[this.value]);
+        if (this.value == "") {
+            resetState();
+        } else {
+            updateCrimeList(this.value);
+            highlightFeatureAUX(beatDictionary[this.value]);
+        }
     };
 
     //L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpg').addTo(map);
     L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+    function resetState() {
+        map.setView([41.82, -87.75], 11);
+        $("#header").html("Click on a beat for additional info, or select a beat from the dropdown menu.");
+        $("#reports").html("");
+        $("#output").html("");
+        resetHighlight(last);
+        setButtonStatus("");
+        map.removeLayer(lastMarker);
+        select.value = '';
+    }
 
     function plotCrime(lat, lon, desc, time, id) {
         $("#" + lastId).removeClass().addClass('list-group-item');
@@ -110,10 +126,16 @@
         if (!L.Browser.ie && !L.Browser.opera) {
             layer.bringToFront();
         }
+
+        zoomToFeature(layer);
     }
 
     function resetHighlight(layer) {
         geojson.resetStyle(layer);
+    }
+
+    function zoomToFeature(layer) {
+        map.fitBounds(layer.getBounds());
     }
 
     function onEachFeature(feature, layer) {
@@ -149,11 +171,16 @@
         });
     }
 
-    function setMoreButtonStatus(beat) {
+    function setButtonStatus(beat) {
         if (offset + 10 >= severity[beat] || severity[beat] == null){
             $("#more").prop('disabled', true);
         } else {
             $("#more").prop('disabled', false);
+        }
+        if (beat != "") {
+            $("#reset").prop('disabled', false);
+        } else {
+            $("#reset").prop('disabled', true);
         }
     }
 
@@ -171,11 +198,15 @@
             $("#output").html('');
             select.value = '';
         }
-        setMoreButtonStatus(beat);
+        setButtonStatus(beat);
     }
 
     $("#more").click(function(){
         showMoreCrimes(select.value);
+    });
+
+    $("#reset").click(function(){
+        resetState();
     });
 
     legend.onAdd = function (map) {
