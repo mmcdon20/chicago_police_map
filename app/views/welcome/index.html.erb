@@ -49,13 +49,16 @@
     // The last id for a crime description, needed when removing selected status
     var lastId = '';
 
+    // allows for lookup of beat layer by id.
+    var beatDictionary = {};
+
     // select box containing a list of beats
     var select = document.getElementById('Beats_Beats');
 
     select.value = '';
 
     select.onchange = function() {
-        updateHeader(this.value);
+        highlightFeatureAUX(beatDictionary[this.value]);
     };
 
     //L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpg').addTo(map);
@@ -86,11 +89,14 @@
     }
 
     function highlightFeature(e) {
-        var layer = e.target;
+        highlightFeatureAUX(e.target);
+    }
+
+    function highlightFeatureAUX(layer) {
         var beat = layer.feature.properties.beat;
 
         if (last) resetHighlight(last);
-        last = e;
+        last = layer;
 
         if (select.value != beat) updateHeader(beat);
         select.value = beat;
@@ -106,11 +112,12 @@
         }
     }
 
-    function resetHighlight(e) {
-        geojson.resetStyle(e.target);
+    function resetHighlight(layer) {
+        geojson.resetStyle(layer);
     }
 
     function onEachFeature(feature, layer) {
+        beatDictionary[feature.properties.beat] = layer;
         layer.on({
             click: highlightFeature
         });
