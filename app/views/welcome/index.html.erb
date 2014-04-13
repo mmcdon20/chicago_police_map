@@ -91,8 +91,10 @@
 
     function highlightFeature(e) {
         var beat = e.target.feature.properties.beat;
-        if (select.value != beat) updateCrimeList(beat);
-        highlightFeatureAUX(e.target);
+        if (select.value != beat) {
+            updateCrimeList(beat);
+            highlightFeatureAUX(e.target);
+        }
     }
 
     function highlightFeatureAUX(layer) {
@@ -137,6 +139,7 @@
             $("#output").html(data);
         });
         select.value = beat;
+        map.removeLayer(lastMarker);
     }
 
     function showMoreCrimes(beat) {
