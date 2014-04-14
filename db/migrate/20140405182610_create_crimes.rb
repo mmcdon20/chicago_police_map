@@ -5,6 +5,8 @@ class CreateCrimes < ActiveRecord::Migration
       t.string :case
       t.string :primary
       t.string :description
+      t.string :block
+      t.string :location
       t.string :beat
       t.string :district
       t.float  :latitude
