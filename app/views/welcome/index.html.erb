@@ -81,7 +81,7 @@
         select.value = '';
     }
 
-    function plotCrime(lat, lon, desc, time, id) {
+    function plotCrime(lat, lon, desc, loc, time, id) {
         $("#" + lastId).removeClass().addClass('list-group-item');
         $("#" + id).removeClass().addClass('list-group-item active');
         lastId = id;
@@ -90,7 +90,7 @@
         map.removeLayer(lastMarker);
         lastMarker = marker;
         marker.addTo(map)
-              .bindPopup(desc + '<br>' + time)
+              .bindPopup(desc + '<br>' + loc + '<br>' + time)
               .openPopup();
     }
 
