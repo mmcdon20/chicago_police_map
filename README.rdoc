@@ -1,28 +1,25 @@
-== README
+= README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+== About
 
-Things you may want to cover:
+This project seeks to provide a visualization of 2014 crime data in chicago by police beat.
+All data for the the application is gathered from the City of Chicago Data portal (https://data.cityofchicago.org).
 
-* Ruby version
+== Technical Details
 
-* System dependencies
+Ruby Version: 2.0.0
 
-* Configuration
+Rails Version: 4.0.4
 
-* Database creation
+Added Dependencies:
+* 'leaflet-rails' - for using leaflet's interactive javascript maps (http://leafletjs.com)
+* 'bootstrap-sass' - for twitter bootstrap 3, front end framework (http://getbootstrap.com)
+* 'json' - for converting data in ruby into json data
+* 'pg' - postgress database for production
+* 'rails_12factor' - to serve static files in production
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+To set up the database:
+ rake db:create
+ rake db:migrate
+ rake db:seed
+note that the seed file transfers over 50,000 records from Crimes.csv to the database, this can take a few minutes.
