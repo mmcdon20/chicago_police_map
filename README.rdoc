@@ -23,3 +23,7 @@ To set up the database:
  rake db:migrate
  rake db:seed
 note that the seed file transfers over 50,000 records from Crimes.csv to the database, this can take a few minutes.
+
+== License
+
+MIT License
