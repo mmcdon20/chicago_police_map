@@ -8,6 +8,8 @@
 
 require 'csv'
 
+beat_crimes = Hash.new(0)
+
 Crime.transaction do
   CSV.foreach("#{Rails.root}/lib/data/Crimes.csv", headers: true) do |crime|
     date = DateTime.strptime(crime['Date'],'%m/%d/%Y %H:%M:%S %p')
@@ -21,5 +23,12 @@ Crime.transaction do
                  district:    crime['District'],
                  latitude:    crime['Latitude'],
                  longitude:   crime['Longitude'])
+    beat_crimes[crime['Beat']] += 1
+  end
+end
+
+Beat.transaction do
+  beat_crimes.each do |beat,crimes|
+    Beat.create(beat: beat, crimes: crimes)
   end
 end
