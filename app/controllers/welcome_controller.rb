@@ -2,13 +2,14 @@ class WelcomeController < ApplicationController
   def index
     require 'json'
 
-    items = Crime.select(:beat).map(&:beat)
+    items = Beat.all
 
-    @beats = items.uniq.sort
+    @beats = items.map(&:beat).sort
 
-    @frequency = items.reduce(Hash.new(0)) do |beat_count, beat|
-      beat_count[beat] += 1
-      beat_count
+    @frequency = Hash.new(0)
+
+    items.each do |item|
+      @frequency[item.beat] = item.crimes
     end
 
     max = @frequency.values.max
