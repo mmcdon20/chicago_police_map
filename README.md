@@ -5,6 +5,11 @@
 This project seeks to provide a visualization of 2014 crime data in chicago by police beat.
 All data for the the application is gathered from the City of Chicago Data portal (https://data.cityofchicago.org).
 
+== Preview Images
+
+* {Image of Map}[https://raw.githubusercontent.com/mmcdon20/chicago_police_map/master/lib/images/map.png]
+* {Image of Crime}[https://raw.githubusercontent.com/mmcdon20/chicago_police_map/master/lib/images/crime.png]
+
 == Technical Details
 
 Ruby Version: 2.0.0
